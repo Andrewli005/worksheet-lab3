@@ -25,7 +25,14 @@ Q2: Convert the `Month` column to a factor with it's levels labeled as month nam
 
 ```{r}
 # your code here
-
+airquality <- airquality |>
+  mutate(
+    Month = factor(
+      Month,
+      levels = 5:9,  # original numeric codes
+      labels = c("May", "June", "July", "August", "September")  # names to use
+    )
+  )
 ```
 
 \
@@ -34,7 +41,10 @@ Q3: Create a new column `Temp_C` that converts the temperature from Fahrenheit t
 
 ```{r}
 # your code here
-
+airquality <- airquality |>
+  mutate(
+    Temp_C = (Temp - 32) * 5/9
+  )
 ```
 
 \
@@ -43,7 +53,18 @@ Q4: Rename the `Wind` column to `Wind_mph` and the Temp column to `Temp_F`.
 
 ```{r}
 # your code here
+airquality <- airquality |>
+    rename(
+        Wind_mph = Wind,
+       Temp_F = Temp
+    )
 
+# airquality <- airquality |>
+#    mutate(
+#        Wind_mph = Wind,
+#       Temp_F = Temp,
+#    select(-wind, -Temp)
+#    )
 ```
 
 \
@@ -52,7 +73,11 @@ Q5: Create a scatter plot of `Ozone` vs `Temp_C`, colored by `Month`. Add approp
 
 ```{r}
 # your code here
-
+airquality |>
+    ggplot(aes(x = Ozone,
+                y = Temp_C,
+                color = Month)) +
+    geom_point()
 ```
 
 \
@@ -92,5 +117,13 @@ Q10: Create a summary table of the number and proportion of NA values in each co
 
 ```{r}
 # your code here
-
+airquality |> 
+    summarize(
+        across(everything(), ~ sum(is.na( . )) # ~ style of writing ( . )=Placeholder where cols go
+        )  
+    )  |> 
+    pivot_longer(everything(), names_to = "column_name", values_to = "number_of_na_vals")
+        # The Hard Way Manualy:
+        # sum_na_vals_Ozone = sum(is.na(Ozone)
+        # sum_na_vals_Solar.R = sum(is.na(Solar.R)
 ```
